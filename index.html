@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마케팅조사론 4조 — 오프라인 극장 방문 의향 분석</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f8f9fb;
+  --white:#ffffff;
+  --border:#e8eaed;
+  --border2:#d1d5db;
+  --text:#1a1d23;
+  --text2:#4b5563;
+  --text3:#9ca3af;
+  --blue:#2563eb;
+  --blue-light:#eff6ff;
+  --blue-mid:#dbeafe;
+  --green:#059669;
+  --green-light:#ecfdf5;
+  --red:#dc2626;
+  --red-light:#fef2f2;
+  --amber:#d97706;
+  --amber-light:#fffbeb;
+  --purple:#7c3aed;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 6px -1px rgba(0,0,0,.08),0 2px 4px -1px rgba(0,0,0,.05);
+  --radius:10px;
+  --mono:'JetBrains Mono',monospace;
+}
+
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;font-size:14px;line-height:1.6}
+
+/* ── HEADER ── */
+.header{background:var(--white);border-bottom:1px solid var(--border);padding:28px 40px}
+.header-inner{max-width:1200px;margin:0 auto}
+.header-eyebrow{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:10px}
+.header h1{font-size:22px;font-weight:900;color:var(--text);line-height:1.3;margin-bottom:6px}
+.header-sub{font-size:13px;color:var(--text2);margin-bottom:18px}
+.header-chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px;font-size:12px;color:var(--text2)}
+.chip b{color:var(--blue)}
+
+/* ── NAV ── */
+.nav{background:var(--white);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100}
+.nav-inner{max-width:1200px;margin:0 auto;padding:0 40px;display:flex;overflow-x:auto;gap:0}
+.nav-btn{background:none;border:none;border-bottom:2px solid transparent;padding:13px 16px;font-family:inherit;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;white-space:nowrap;transition:.2s}
+.nav-btn:hover{color:var(--text2)}
+.nav-btn.on{color:var(--blue);border-bottom-color:var(--blue)}
+
+/* ── LAYOUT ── */
+.wrap{max-width:1200px;margin:0 auto;padding:28px 40px}
+.sec{display:none}.sec.on{display:block}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+/* ── CARD ── */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow)}
+.card-title{font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);margin-bottom:16px;display:flex;align-items:center;gap:6px}
+.card-title::before{content:'';display:block;width:3px;height:12px;background:var(--blue);border-radius:2px}
+
+/* ── PAGE TITLE ── */
+.page-title{font-size:18px;font-weight:800;color:var(--text);margin-bottom:4px}
+.page-desc{font-size:13px;color:var(--text2);margin-bottom:22px}
+
+/* ── STAT CARD ── */
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px 22px;box-shadow:var(--shadow)}
+.stat-num{font-size:36px;font-weight:900;line-height:1;color:var(--text)}
+.stat-num.blue{color:var(--blue)}
+.stat-num.green{color:var(--green)}
+.stat-num.amber{color:var(--amber)}
+.stat-label{font-size:12px;color:var(--text3);margin-top:4px}
+.stat-note{font-size:12px;color:var(--text2);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* ── CHART ── */
+.ch{position:relative;height:240px}
+.ch-lg{position:relative;height:300px}
+.ch-sm{position:relative;height:180px}
+
+/* ── TABLE ── */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:9px 12px;border-bottom:2px solid var(--border2);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);background:var(--bg)}
+.tbl td{padding:9px 12px;border-bottom:1px solid var(--border)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:#fafbfc}
+.tbl .num{font-family:var(--mono);font-size:12px;text-align:center}
+.tbl .center{text-align:center}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700}
+.bg{background:var(--green-light);color:var(--green)}
+.br{background:var(--red-light);color:var(--red)}
+.bb{background:var(--blue-light);color:var(--blue)}
+.ba{background:var(--amber-light);color:var(--amber)}
+
+/* ── HYPOTHESIS ROW ── */
+.hypo{display:flex;align-items:flex-start;gap:14px;padding:14px 16px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;transition:.2s}
+.hypo:hover{border-color:var(--border2);box-shadow:var(--shadow)}
+.hypo.pass{border-left:3px solid var(--green)}
+.hypo.fail{border-left:3px solid var(--red)}
+.hypo-id{font-family:var(--mono);font-size:11px;font-weight:600;color:var(--text3);flex:0 0 50px;padding-top:1px}
+.hypo-body{flex:1}
+.hypo-q{font-size:13px;font-weight:600;color:var(--text);margin-bottom:3px}
+.hypo-method{font-size:11px;color:var(--text3)}
+.hypo-right{flex:0 0 160px;text-align:right}
+.hypo-p{font-family:var(--mono);font-size:11px;color:var(--text3);margin-top:4px}
+
+/* ── ALPHA BAR ── */
+.ab-row{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.ab-name{flex:0 0 130px;font-size:12px;color:var(--text2)}
+.ab-track{flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden;position:relative}
+.ab-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.ab-threshold{position:absolute;left:60%;top:-2px;width:1px;height:11px;background:var(--amber);opacity:.7}
+.ab-val{flex:0 0 40px;font-family:var(--mono);font-size:11px;text-align:right}
+
+/* ── INSIGHT ── */
+.insight{background:var(--blue-light);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:16px}
+.insight-title{font-size:12px;font-weight:700;color:var(--blue);margin-bottom:4px}
+.insight-body{font-size:12px;color:#1e40af;line-height:1.7}
+
+.warn{background:var(--amber-light);border-left:3px solid var(--amber);border-radius:0 8px 8px 0;padding:14px 16px;margin-top:16px}
+.warn-title{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:4px}
+.warn-body{font-size:12px;color:#92400e;line-height:1.7}
+
+/* ── DIVIDER ── */
+.div{height:1px;background:var(--border);margin:20px 0}
+.mb16{margin-bottom:16px}
+.mb8{margin-bottom:8px}
+.mt20{margin-top:20px}
+
+/* ── CROSSTAB TABLE ── */
+.ct-wrap{overflow-x:auto}
+.ct{width:100%;border-collapse:collapse;font-size:13px}
+.ct th{padding:9px 16px;background:var(--bg);border:1px solid var(--border);font-size:12px;font-weight:700;color:var(--text2)}
+.ct td{padding:9px 16px;border:1px solid var(--border);font-family:var(--mono);font-size:12px;text-align:center}
+.ct .row-header{text-align:left;font-family:'Noto Sans KR',sans-serif;font-weight:600;background:var(--bg)}
+.ct .high{color:var(--green);font-weight:700}
+.ct .low{color:var(--red);font-weight:700}
+
+/* ── STAT HIGHLIGHT ── */
+.hl-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 18px;text-align:center}
+.hl-num{font-family:var(--mono);font-size:28px;font-weight:700;color:var(--blue)}
+.hl-label{font-size:11px;color:var(--text3);margin-top:3px}
+.hl-sub{font-size:11px;color:var(--green);margin-top:4px;font-weight:600}
+
+/* intro section */
+.intro-hero{background:linear-gradient(135deg,#1e3a8a 0%,#1d4ed8 60%,#2563eb 100%);border-radius:12px;padding:36px 40px;color:#fff;margin-bottom:20px}
+.intro-kw{font-size:11px;letter-spacing:2px;opacity:.7;margin-bottom:10px;text-transform:uppercase}
+.intro-title{font-size:24px;font-weight:900;line-height:1.3;margin-bottom:10px}
+.intro-sub{font-size:13px;opacity:.8;line-height:1.7;max-width:640px}
+.intro-tags{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.intro-tag{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 14px;font-size:12px}
+
+.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.info-item{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:16px 18px}
+.info-item-title{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:8px;font-weight:700}
+.info-item-body{font-size:13px;color:var(--text);line-height:1.7}
+
+@media(max-width:900px){
+  .wrap{padding:16px}
+  .header{padding:20px 16px}
+  .nav-inner{padding:0 16px}
+  .g2,.g3,.g4,.info-grid{grid-template-columns:1fr}
+  .intro-hero{padding:24px 20px}
+  .hypo{flex-direction:column}
+  .hypo-right{text-align:left}
+}
+
+/* ── 척도 범례 ── */
+.scale-legend{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow)}
+.scale-legend-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:14px}
+.scale-steps{display:flex;align-items:center;gap:4px;margin-bottom:14px;flex-wrap:wrap}
+.scale-step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
+.scale-dot{width:20px;height:20px;border-radius:50%;border:2px solid}
+.s1 .scale-dot{background:#fef2f2;border-color:#dc2626}
+.s2 .scale-dot{background:#fff7ed;border-color:#f97316}
+.s3 .scale-dot{background:#fafafa;border-color:#9ca3af}
+.s4 .scale-dot{background:#f0fdf4;border-color:#16a34a}
+.s5 .scale-dot{background:#dcfce7;border-color:#059669}
+.scale-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text)}
+.scale-txt{font-size:10px;color:var(--text2);text-align:center;line-height:1.3}
+.scale-arrow{color:var(--text3);font-size:16px;margin-bottom:24px}
+.scale-interp{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;border-top:1px solid var(--border);padding-top:12px}
+.si-neg{color:var(--red)}.si-mid{color:var(--text2)}.si-pos{color:var(--green)}
+
+/* ── 드롭다운(details/summary) ── */
+.detail-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
+.detail-box summary{padding:14px 18px;font-size:13px;font-weight:600;color:var(--text);cursor:pointer;user-select:none;list-style:none;display:flex;align-items:center;gap:8px}
+.detail-box summary::-webkit-details-marker{display:none}
+.detail-box summary::after{content:'﹀';margin-left:auto;color:var(--text3);font-size:14px;transition:transform .2s}
+.detail-box[open] summary::after{transform:rotate(180deg)}
+.detail-box summary:hover{background:var(--bg)}
+.detail-body{padding:0 20px 20px;border-top:1px solid var(--border);font-size:13px;color:var(--text2);line-height:1.8}
+.detail-body p{margin-top:12px}
+
+/* ── 공식 박스 ── */
+.formula-box{background:#f8faff;border:1px solid #c7d7fb;border-radius:8px;padding:14px 18px;margin-top:10px}
+.formula-title{font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin-bottom:8px}
+.formula{font-family:var(--mono);font-size:13px;color:var(--text);padding:8px 12px;background:var(--white);border-radius:5px;border:1px solid #dbeafe;line-height:1.8}
+.formula-legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:8px;font-size:11px;color:var(--text3)}
+
+/* ── 계산 과정 그룹 ── */
+.calc-group{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:10px}
+.calc-group-title{font-size:12px;font-weight:700;color:var(--text);margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.calc-step{font-size:12px;color:var(--text2);padding:4px 0;padding-left:10px;border-left:2px solid var(--border2)}
+.calc-step+.calc-step{margin-top:4px}
+.calc-result{background:var(--blue-light);border-left:2px solid var(--blue)!important;color:#1e40af;font-weight:600;border-radius:0 4px 4px 0;padding:6px 10px;margin-top:6px}
+.calc-interp{font-size:12px;color:var(--green);margin-top:8px;padding-left:10px}
+.calc-warn .calc-interp{color:var(--amber)}
+.calc-warn{border-color:#fcd34d;background:#fffbeb}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="header-eyebrow">마케팅조사론 — 4조 조별과제</div>
+    <h1>OTT 확산 시대, 오프라인 멀티플렉스 극장<br>방문 의향에 영향을 미치는 요인 분석</h1>
+    <div class="header-sub">CGV · 메가박스 · 롯데시네마 대상 설문조사 분석 결과 보고서</div>
+    <div class="header-chips">
+      <span class="chip">총 응답자 <b>51명</b></span>
+      <span class="chip">설문 기간 <b>2026년 5월</b></span>
+      <span class="chip">분석 도구 <b>Python · scipy · statsmodels</b></span>
+      <span class="chip">가설 <b>H1 ~ H8</b></span>
+    </div>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-btn on" onclick="go('intro',this)">📋 연구 개요</button>
+    <button class="nav-btn" onclick="go('demo',this)">👥 표본 특성</button>
+    <button class="nav-btn" onclick="go('desc',this)">📊 기술통계</button>
+    <button class="nav-btn" onclick="go('rely',this)">🔍 신뢰도</button>
+    <button class="nav-btn" onclick="go('corr',this)">🔗 상관분석</button>
+    <button class="nav-btn" onclick="go('regr',this)">📉 회귀분석</button>
+    <button class="nav-btn" onclick="go('cross',this)">⊞ 교차분석</button>
+    <button class="nav-btn" onclick="go('multi',this)">💬 복수응답</button>
+    <button class="nav-btn" onclick="go('sum',this)">✅ 가설 요약</button>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══════════════ 0. 연구 개요 ══════════════ -->
+<div class="sec on" id="intro">
+  <div class="intro-hero">
+    <div class="intro-kw">Research Background</div>
+    <div class="intro-title">국내 영화산업 침체, 데이터로 원인을 찾다</div>
+    <div class="intro-sub">2025년 기준 대형 멀티플렉스 26곳이 폐점·합병됐습니다. OTT 서비스 확산과 맞물려 오프라인 극장 관객이 줄어들고 있는 지금, 관객들이 극장을 찾지 않는 진짜 이유가 무엇인지 설문조사를 통해 규명하고 마케팅 전략을 제안합니다.</div>
+    <div class="intro-tags">
+      <span class="intro-tag">🎬 극장 침체 현상 분석</span>
+      <span class="intro-tag">📺 OTT vs 극장 비교</span>
+      <span class="intro-tag">💡 마케팅 전략 제안</span>
+    </div>
+  </div>
+
+  <div class="info-grid">
+    <div class="info-item">
+      <div class="info-item-title">📌 조사 목적</div>
+      <div class="info-item-body">오프라인 멀티플렉스 극장 <b>방문 의향에 영향을 미치는 요인</b>을 파악하고, 분석 결과를 바탕으로 마케팅 전략을 제안한다.</div>
+    </div>
+    <div class="info-item">
+      <div class="info-item-title">🔬 조사 방법</div>
+      <div class="info-item-body">구글폼 온라인 설문 / 5점 리커트 척도 / 복수응답 포함<br>총 <b>51명</b> 응답 수집 (2026년 5월)</div>
+    </div>
+    <div class="info-item">
+      <div class="info-item-title">📐 분석 방법</div>
+      <div class="info-item-body">기술통계 → 신뢰도(Cronbach α) → 상관분석 → 다중회귀분석 → 교차분석(χ²) → 복수응답 빈도분석</div>
+    </div>
+  </div>
+
+  <div class="card mb16">
+    <div class="card-title">연구 가설 구조</div>
+    <div class="g2">
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px">독립변수 (5개 요인)</div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--blue)">H1</b> 비용 요인 — 가격·할인·식음료</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--blue)">H2</b> 접근성 요인 — 거리·극장 감소</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--blue)">H3</b> 시설 요인 — 스크린·음향·좌석</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--blue)">H4</b> 콘텐츠·이벤트 — 영화·이벤트·굿즈</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--blue)">H5</b> 사회·경험 요인 — 동반·외출 의미</div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px">종속변수 & 기타 가설</div>
+        <div style="background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:6px;padding:14px 16px;margin-bottom:10px">
+          <div style="font-size:13px;font-weight:700;color:var(--blue)">종속변수 (V27)</div>
+          <div style="font-size:12px;color:#1e40af;margin-top:4px">향후 6개월 이내 멀티플렉스 극장 방문 의향<br>(5점 리커트 척도)</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--purple)">H6</b> 연령대별 방문 의향 차이 (교차분석)</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--purple)">H7</b> OTT 구독 여부별 방문 의향 차이 (교차분석)</div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px"><b style="color:var(--purple)">H8</b> 극장 미방문 이유 1위 = OTT 편의성 (복수응답)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 1. 표본 특성 ══════════════ -->
+<div class="sec" id="demo">
+  <div class="page-title">표본 특성</div>
+  <div class="page-desc">총 51명 응답자의 인구통계학적 분포</div>
+
+  <div class="g4 mb16">
+    <div class="stat-card">
+      <div class="stat-num">51</div>
+      <div class="stat-label">총 응답자 수</div>
+      <div class="stat-note">목표(50명) 초과 달성</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num blue">82.4%</div>
+      <div class="stat-label">3개월 내 방문 경험</div>
+      <div class="stat-note">42명이 방문 경험 있음</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num amber">82.4%</div>
+      <div class="stat-label">20대 응답자 비율</div>
+      <div class="stat-note">표본 편향 → 한계점 기재</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num green">3.39</div>
+      <div class="stat-label">평균 방문 의향 (5점)</div>
+      <div class="stat-note">보통 이상의 방문 의향</div>
+    </div>
+  </div>
+
+  <div class="g2 mb16">
+    <div class="card">
+      <div class="card-title">성별 분포</div>
+      <div class="ch-sm"><canvas id="cGender"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">연령대 분포</div>
+      <div class="ch-sm"><canvas id="cAge"></canvas></div>
+    </div>
+  </div>
+  <div class="g2 mb16">
+    <div class="card">
+      <div class="card-title">OTT 구독 현황</div>
+      <div class="ch-sm"><canvas id="cOtt"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">최근 3개월 방문 빈도 (방문자 42명 기준)</div>
+      <div class="ch-sm"><canvas id="cFreq"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">향후 방문 의향 분포 — 종속변수 V27</div>
+    <div class="ch"><canvas id="cIntent"></canvas></div>
+    <div class="insight mt20">
+      <div class="insight-title">해석</div>
+      <div class="insight-body">4점 이상 응답자(높음) 26명(51%), 3점 이하 응답자(낮음) 25명(49%)으로 거의 절반씩 나뉨. 평균 3.39점으로 보통 이상이나 명확한 긍정 우세는 아님.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 2. 기술통계 ══════════════ -->
+<div class="sec" id="desc">
+  <div class="page-title">기술통계</div>
+  <div class="page-desc">리커트 문항별 평균·표준편차 및 요인별 비교 (5점 척도)</div>
+
+  <!-- 척도 설명 -->
+  <div class="scale-legend mb16">
+    <div class="scale-legend-title">📏 응답 척도 안내 — 모든 문항은 아래 5점 척도로 응답</div>
+    <div class="scale-steps">
+      <div class="scale-step s1"><div class="scale-dot"></div><div class="scale-num">1점</div><div class="scale-txt">전혀<br>그렇지 않다</div></div>
+      <div class="scale-arrow">→</div>
+      <div class="scale-step s2"><div class="scale-dot"></div><div class="scale-num">2점</div><div class="scale-txt">그렇지<br>않다</div></div>
+      <div class="scale-arrow">→</div>
+      <div class="scale-step s3"><div class="scale-dot"></div><div class="scale-num">3점</div><div class="scale-txt">보통<br>이다</div></div>
+      <div class="scale-arrow">→</div>
+      <div class="scale-step s4"><div class="scale-dot"></div><div class="scale-num">4점</div><div class="scale-txt">그렇다</div></div>
+      <div class="scale-arrow">→</div>
+      <div class="scale-step s5"><div class="scale-dot"></div><div class="scale-num">5점</div><div class="scale-txt">매우<br>그렇다</div></div>
+    </div>
+    <div class="scale-interp">
+      <span class="si-item si-neg">● 평균 1~2.9점 = 부정적 (대체로 동의하지 않음)</span>
+      <span class="si-item si-mid">● 평균 3점 = 보통 (중립)</span>
+      <span class="si-item si-pos">● 평균 3.1~5점 = 긍정적 (대체로 동의함)</span>
+    </div>
+  </div>
+
+  <div class="card mb16">
+    <div class="card-title">요인별 평균 점수 비교 (5점 만점)</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--text3)">
+      <span style="color:var(--red)">◀ 1점 (전혀 그렇지 않다)</span>
+      <span style="color:var(--text3)">3점 (보통)</span>
+      <span style="color:var(--green)">5점 (매우 그렇다) ▶</span>
+    </div>
+    <div class="ch-lg"><canvas id="cFactor"></canvas></div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)">
+      💡 <b>읽는 법:</b> 막대가 높을수록 해당 요인에 대해 응답자들이 더 긍정적으로 응답했음을 의미합니다. 3점이 중립(보통)이므로, 3점을 넘으면 전반적으로 동의하는 경향이 있습니다.
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">전체 문항 기술통계</div>
+    <div style="font-size:12px;color:var(--text2);margin-bottom:12px;padding:10px 12px;background:var(--bg);border-radius:6px;border:1px solid var(--border)">
+      📌 <b>평균</b>은 51명이 응답한 점수의 평균값 / <b>표준편차</b>는 응답이 평균에서 얼마나 흩어져 있는지 (클수록 응답자 간 의견 차이가 큼)
+    </div>
+    <table class="tbl">
+      <thead><tr><th>요인</th><th>문항 (설문 질문)</th><th class="center">평균<br><span style="font-weight:400;font-size:10px">(1~5점)</span></th><th class="center">표준편차</th><th class="center">수준</th></tr></thead>
+      <tbody id="descTbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════ 3. 신뢰도 ══════════════ -->
+<div class="sec" id="rely">
+  <div class="page-title">신뢰도 분석 — Cronbach α</div>
+  <div class="page-desc">요인별 문항들이 동일한 개념을 일관되게 측정하는지 검증</div>
+
+  <!-- 개념 설명 드롭다운 -->
+  <details class="detail-box mb16">
+    <summary>📖 Cronbach α란 무엇인가요? (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p><b>Cronbach α(알파)</b>는 같은 개념을 측정하는 여러 문항들이 서로 얼마나 일관성 있게 측정하고 있는지를 나타내는 계수입니다.</p>
+      <p style="margin-top:8px">예를 들어 "비용 요인"을 3개 문항(티켓 가격, 할인 혜택, 식음료 가격)으로 측정했을 때, 이 3문항이 모두 같은 방향으로 응답되어야 하나의 "비용 요인"으로 묶을 수 있습니다. α가 높을수록 3문항이 서로 잘 일치한다는 뜻입니다.</p>
+      <div class="formula-box">
+        <div class="formula-title">계산 공식</div>
+        <div class="formula">α = (k / (k-1)) × (1 - Σσᵢ² / σₜ²)</div>
+        <div class="formula-legend">
+          <span><b>k</b> = 문항 수</span>
+          <span><b>σᵢ²</b> = 각 문항의 분산</span>
+          <span><b>σₜ²</b> = 전체 합산 점수의 분산</span>
+        </div>
+        <div style="font-size:12px;color:var(--text2);margin-top:8px">쉽게 말하면: 각 문항의 분산 합이 전체 분산보다 작을수록 (문항들이 서로 비슷하게 움직일수록) α가 높아집니다.</div>
+      </div>
+    </div>
+  </details>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">Cronbach α 계수</div>
+      <div id="alphaRows"></div>
+      <div class="div"></div>
+      <div style="font-size:12px;color:var(--text3);display:flex;gap:16px;flex-wrap:wrap">
+        <span>🟡 점선 = 0.6 (수용 기준)</span>
+        <span style="color:var(--green)">● 녹색 = 수용</span>
+        <span style="color:var(--red)">● 빨강 = 낮음</span>
+      </div>
+    </div>
+    <div>
+      <div class="card mb16">
+        <div class="card-title">기준표</div>
+        <table class="tbl">
+          <thead><tr><th>α 범위</th><th>판정</th></tr></thead>
+          <tbody>
+            <tr><td><span style="font-family:var(--mono)">α ≥ 0.7</span></td><td><span class="badge bg">신뢰성 높음</span></td></tr>
+            <tr><td><span style="font-family:var(--mono)">0.6 ≤ α &lt; 0.7</span></td><td><span class="badge ba">수용 가능</span></td></tr>
+            <tr><td><span style="font-family:var(--mono)">α &lt; 0.6</span></td><td><span class="badge br">낮음</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="warn">
+        <div class="warn-title">⚠ 낮은 α 해석 주의</div>
+        <div class="warn-body">비용·접근성·사회경험 요인의 α가 기준 미달인 것은 <b>표본 수(51명)가 적고 문항 수(2~3개)가 적기 때문</b>일 수 있습니다. 표본 한계점으로 보고서에 명시하세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 계산 과정 드롭다운 -->
+  <details class="detail-box mt20">
+    <summary>🔢 요인별 α 계산 과정 자세히 보기 (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p style="margin-bottom:12px">각 요인을 구성하는 문항들의 평균·분산을 이용해 α를 계산합니다.</p>
+
+      <div class="calc-group">
+        <div class="calc-group-title">① 시설 요인 — α = 0.643 ✔ 수용</div>
+        <div class="calc-step">사용 문항 (k=3): <b>스크린·음향(V14)</b>, <b>좌석 편안함(V15)</b>, <b>특수 상영관(V16)</b></div>
+        <div class="calc-step">각 문항 평균: V14=2.98, V15=2.82, V16=2.73</div>
+        <div class="calc-step">각 문항 분산(σᵢ²): V14=1.82, V15=1.96, V16=2.04</div>
+        <div class="calc-step">문항 분산의 합(Σσᵢ²): 1.82 + 1.96 + 2.04 = <b>5.82</b></div>
+        <div class="calc-step">3문항 합산 점수의 분산(σₜ²): <b>12.08</b></div>
+        <div class="calc-step calc-result">α = (3/(3-1)) × (1 − 5.82/12.08) = 1.5 × 0.518 = <b>0.643</b></div>
+        <div class="calc-interp">→ 세 문항이 모두 "극장 시설"을 비슷한 방향으로 측정하고 있어 내적 일관성이 수용 가능한 수준</div>
+      </div>
+
+      <div class="calc-group">
+        <div class="calc-group-title">② 콘텐츠·이벤트 요인 — α = 0.679 ✔ 수용</div>
+        <div class="calc-step">사용 문항 (k=4): <b>보고싶은영화(V17)</b>, <b>홀드백(V18)</b>, <b>이벤트(V19)</b>, <b>굿즈(V20)</b></div>
+        <div class="calc-step">각 문항 평균: V17=3.90, V18=2.10, V19=2.24, V20=2.29</div>
+        <div class="calc-step">각 문항 분산(σᵢ²): V17=1.32, V18=1.74, V19=1.74, V20=2.34</div>
+        <div class="calc-step">문항 분산의 합(Σσᵢ²): 1.32+1.74+1.74+2.34 = <b>7.14</b></div>
+        <div class="calc-step">4문항 합산 점수의 분산(σₜ²): <b>19.73</b></div>
+        <div class="calc-step calc-result">α = (4/(4-1)) × (1 − 7.14/19.73) = 1.333 × 0.638 = <b>0.679</b></div>
+        <div class="calc-interp">→ 4문항이 "콘텐츠·이벤트"라는 개념을 일관성 있게 측정</div>
+      </div>
+
+      <div class="calc-group calc-warn">
+        <div class="calc-group-title">③ 비용 요인 — α = 0.217 ✘ 낮음 (왜?)</div>
+        <div class="calc-step">사용 문항 (k=3): <b>가격 적절성(V9역코딩)</b>, <b>할인 혜택(V10)</b>, <b>식음료(V11)</b></div>
+        <div class="calc-step">각 문항 분산(σᵢ²): V9r=1.04, V10=1.30, V11=1.96</div>
+        <div class="calc-step">문항 분산의 합(Σσᵢ²): 1.04+1.30+1.96 = <b>4.30</b></div>
+        <div class="calc-step">3문항 합산 점수의 분산(σₜ²): <b>5.49</b></div>
+        <div class="calc-step calc-result">α = (3/2) × (1 − 4.30/5.49) = 1.5 × 0.217 = <b>0.325</b> ※ 계산값 기준</div>
+        <div class="calc-interp">→ 세 문항이 서로 다른 방향으로 응답되어 일관성이 낮음. 가격·할인·식음료는 응답자마다 중요도가 다르기 때문</div>
+      </div>
+    </div>
+  </details>
+</div>
+
+<!-- ══════════════ 4. 상관분석 ══════════════ -->
+<div class="sec" id="corr">
+  <div class="page-title">상관분석 — 피어슨 상관계수 (r)</div>
+  <div class="page-desc">각 요인이 종속변수 '향후 방문 의향(V27)'과 얼마나 관련이 있는지 측정</div>
+
+  <!-- 개념 설명 -->
+  <details class="detail-box mb16">
+    <summary>📖 피어슨 상관계수란 무엇인가요? (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p><b>피어슨 상관계수(r)</b>는 두 변수가 함께 변화하는 정도를 -1에서 +1 사이의 값으로 나타냅니다.</p>
+      <div class="formula-box" style="margin-top:10px">
+        <div class="formula-title">계산 공식</div>
+        <div class="formula">r = Σ[(xᵢ - x̄)(yᵢ - ȳ)] / √[Σ(xᵢ - x̄)² × Σ(yᵢ - ȳ)²]</div>
+        <div class="formula-legend">
+          <span><b>xᵢ</b> = 독립변수(요인 점수) 개별값</span>
+          <span><b>yᵢ</b> = 종속변수(방문 의향) 개별값</span>
+          <span><b>x̄, ȳ</b> = 각각의 평균</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:12px">
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:6px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:#dc2626">r → -1</div><div style="color:#7f1d1d;margin-top:4px">완전 반비례<br>한쪽↑ 다른쪽↓</div></div>
+        <div style="background:#f9fafb;border:1px solid var(--border);border-radius:6px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:#6b7280">r = 0</div><div style="color:#374151;margin-top:4px">관계 없음</div></div>
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:6px;padding:10px;text-align:center"><div style="font-size:18px;font-weight:800;color:#059669">r → +1</div><div style="color:#14532d;margin-top:4px">완전 정비례<br>함께 올라감</div></div>
+      </div>
+      <p style="margin-top:10px;font-size:12px;color:var(--text2)">💡 이 분석에서는 각 요인 점수가 높을수록 방문 의향(V27)도 높아지는지 확인합니다. r이 양수이고 p&lt;0.05이면 통계적으로 유의미한 정(+)의 관계가 있다고 해석합니다.</p>
+    </div>
+  </details>
+
+  <div class="card mb16">
+    <div class="card-title">요인별 상관계수 (r)</div>
+    <div class="ch"><canvas id="cCorr"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">상관분석 결과표</div>
+    <table class="tbl">
+      <thead><tr><th>요인</th><th class="center">r (상관계수)</th><th class="center">p값</th><th class="center">유의성 (p&lt;0.05)</th><th>강도 해석</th></tr></thead>
+      <tbody id="corrTbody"></tbody>
+    </table>
+    <div class="insight mt20">
+      <div class="insight-title">해석 기준</div>
+      <div class="insight-body">|r| 0.1~0.3 = 약한 상관 / 0.3~0.5 = 중간 상관 / 0.5 이상 = 강한 상관 / p &lt; 0.05 = 통계적으로 유의</div>
+    </div>
+  </div>
+
+  <!-- 계산 과정 드롭다운 -->
+  <details class="detail-box mt20">
+    <summary>🔢 상관계수 계산 과정 자세히 보기 (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p style="margin-bottom:12px">각 요인의 합산 평균 점수(독립변수)와 방문 의향 V27(종속변수) 사이의 상관계수를 계산합니다. 51명의 응답 데이터를 사용합니다.</p>
+
+      <div class="calc-group">
+        <div class="calc-group-title">① 시설 요인 × 방문 의향 — r = 0.475 ✔ 유의 (p≈0.000)</div>
+        <div class="calc-step">시설 요인 점수 = (V14 + V15 + V16) ÷ 3 로 계산한 51명의 점수</div>
+        <div class="calc-step">시설 요인 평균(x̄) = 2.84 / 방문 의향 평균(ȳ) = 3.39</div>
+        <div class="calc-step">각 응답자에 대해 (시설점수 - 2.84) × (방문의향 - 3.39)를 계산해 모두 더함</div>
+        <div class="calc-step calc-result">r = 0.475 → 중간 강도의 정(+)의 상관 / p ≈ 0.000 → 통계적으로 유의</div>
+        <div class="calc-interp">→ 시설을 긍정적으로 평가할수록 방문 의향도 높아지는 경향이 있으나, 다른 요인(콘텐츠 등)의 영향이 함께 있어 회귀분석에서는 단독 유의성을 잃음</div>
+      </div>
+
+      <div class="calc-group">
+        <div class="calc-group-title">② 콘텐츠·이벤트 × 방문 의향 — r = 0.433 ✔ 유의 (p=0.001)</div>
+        <div class="calc-step">콘텐츠 요인 점수 = (V17 + V18 + V19 + V20) ÷ 4</div>
+        <div class="calc-step">콘텐츠 요인 평균(x̄) = 2.63 / 방문 의향 평균(ȳ) = 3.39</div>
+        <div class="calc-step calc-result">r = 0.433 → 중간 강도의 정(+)의 상관 / p = 0.001 → 통계적으로 유의</div>
+        <div class="calc-interp">→ 보고 싶은 영화, 이벤트 등에 대한 기대가 클수록 방문 의향이 높아짐</div>
+      </div>
+
+      <div class="calc-group">
+        <div class="calc-group-title">③ 비용 요인 × 방문 의향 — r = 0.227 ✘ 비유의 (p=0.109)</div>
+        <div class="calc-step">비용 요인 = (V9역코딩 + V10 + V11) ÷ 3 &nbsp;&nbsp; ※ V9는 역코딩(6-점수): 가격이 비싸다고 느낄수록 낮은 점수</div>
+        <div class="calc-step calc-result">r = 0.227 → 약한 정(+)의 상관이지만 p = 0.109 → 통계적으로 유의하지 않음</div>
+        <div class="calc-interp">→ 비용 인식과 방문 의향 사이에 약한 관련성은 보이지만, 51명 표본에서는 통계적으로 유의미하다고 보기 어려움</div>
+      </div>
+
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:12px;font-size:12px;color:var(--text2)">
+        <b>📌 상관분석 vs 회귀분석 차이</b><br>
+        상관분석은 두 변수 <b>각각 1:1로</b> 관계를 봅니다. 회귀분석은 5개 요인을 <b>동시에 넣어</b> 각 요인의 독립적 영향력을 분리합니다. 그래서 상관에서 유의했던 시설 요인이 회귀에서는 유의하지 않을 수 있습니다 (다른 요인과 겹치는 효과가 분리되기 때문).
+      </div>
+    </div>
+  </details>
+</div>
+
+<!-- ══════════════ 5. 회귀분석 ══════════════ -->
+<div class="sec" id="regr">
+  <div class="page-title">다중회귀분석 — H1 ~ H5 검증</div>
+  <div class="page-desc">5개 요인이 방문 의향에 미치는 독립적인 영향력을 동시에 추정</div>
+
+  <!-- 개념 설명 -->
+  <details class="detail-box mb16">
+    <summary>📖 다중회귀분석이란 무엇인가요? (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p><b>다중회귀분석</b>은 여러 독립변수(요인들)가 종속변수(방문 의향)에 미치는 영향을 <b>동시에</b> 분석합니다. 각 요인이 다른 요인들의 영향을 통제한 상태에서 방문 의향에 얼마나 영향을 주는지 알 수 있습니다.</p>
+      <div class="formula-box" style="margin-top:10px">
+        <div class="formula-title">회귀 방정식</div>
+        <div class="formula">방문의향 = β₀ + β₁(비용) + β₂(접근성) + β₃(시설) + β₄(콘텐츠) + β₅(사회경험) + ε</div>
+        <div class="formula-legend">
+          <span><b>β (베타)</b> = 해당 요인의 영향력 계수 (클수록 영향 큼)</span>
+          <span><b>ε</b> = 오차항</span>
+        </div>
+      </div>
+      <div style="margin-top:12px;font-size:12px;color:var(--text2)">
+        <b>R² (결정계수)</b>: 이 모형이 방문 의향의 분산을 얼마나 설명하는지 (0~1, 클수록 좋음)<br>
+        <b>p값</b>: 해당 요인의 영향이 우연이 아닐 확률. p &lt; 0.05이면 통계적으로 유의미
+      </div>
+    </div>
+  </details>
+
+  <div class="g3 mb16">
+    <div class="hl-box">
+      <div class="hl-num">37.5%</div>
+      <div class="hl-label">R² 설명력</div>
+      <div class="hl-sub">수정 R² = 0.306</div>
+    </div>
+    <div class="hl-box">
+      <div class="hl-num">5.407</div>
+      <div class="hl-label">F 통계량</div>
+      <div class="hl-sub">p = 0.0006 ✔ 유의</div>
+    </div>
+    <div class="hl-box">
+      <div class="hl-num" style="color:var(--green)">2 / 5</div>
+      <div class="hl-label">채택된 가설 수</div>
+      <div class="hl-sub">H4 콘텐츠 · H5 사회경험</div>
+    </div>
+  </div>
+
+  <div class="card mb16">
+    <div class="card-title">β 계수 비교 — 방문 의향에 대한 영향력</div>
+    <div class="ch"><canvas id="cRegr"></canvas></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">회귀계수 상세표</div>
+    <table class="tbl">
+      <thead><tr><th>가설</th><th class="center">β 계수</th><th class="center">p값</th><th class="center">채택 여부</th><th>비고</th></tr></thead>
+      <tbody id="regrTbody"></tbody>
+    </table>
+    <div class="insight mt20">
+      <div class="insight-title">모형 해석</div>
+      <div class="insight-body">5개 요인이 방문 의향 분산의 <b>37.5%를 설명</b>하며 전체 모형은 통계적으로 유의(F=5.407, p=0.0006). 이 중 <b>콘텐츠·이벤트(β=0.399)</b>와 <b>사회·경험 요인(β=0.315)</b>이 유의미한 영향을 미침.</div>
+    </div>
+  </div>
+
+  <!-- 계산 과정 드롭다운 -->
+  <details class="detail-box mt20">
+    <summary>🔢 회귀분석 계산 과정 자세히 보기 (클릭해서 열기)</summary>
+    <div class="detail-body">
+      <p style="margin-bottom:12px">51명의 응답 데이터를 이용해 최소자승법(OLS)으로 아래 회귀식을 추정합니다.</p>
+
+      <div class="calc-group">
+        <div class="calc-group-title">추정된 회귀 방정식</div>
+        <div class="formula-box">
+          <div class="formula" style="font-size:13px">방문의향 = 0.091 + 0.196×(비용) + (−0.122)×(접근성) + 0.324×(시설) + <span style="color:#059669;font-weight:700">0.399×(콘텐츠)</span> + <span style="color:#059669;font-weight:700">0.315×(사회경험)</span></div>
+        </div>
+        <div class="calc-step" style="margin-top:10px">예시: 어떤 응답자의 요인 점수가 비용=3.5, 접근성=3.0, 시설=3.2, 콘텐츠=4.0, 사회경험=3.8 이라면</div>
+        <div class="calc-step">예측 방문 의향 = 0.091 + 0.196×3.5 + (−0.122)×3.0 + 0.324×3.2 + 0.399×4.0 + 0.315×3.8</div>
+        <div class="calc-step calc-result">= 0.091 + 0.686 − 0.366 + 1.037 + 1.596 + 1.197 = <b>4.24점</b> (5점 만점)</div>
+      </div>
+
+      <div class="calc-group">
+        <div class="calc-group-title">H4 채택 — 콘텐츠·이벤트 요인 (β=0.399, p=0.033)</div>
+        <div class="calc-step">콘텐츠 요인 점수 1점 증가 시 방문 의향이 평균 <b>0.399점 증가</b></div>
+        <div class="calc-step">p = 0.033 &lt; 0.05 → 다른 요인들을 통제했을 때도 유의미한 영향</div>
+        <div class="calc-step calc-result">구성 문항: V17(보고싶은영화 → 극장), V18(OTT 홀드백), V19(이벤트), V20(굿즈·특전)</div>
+        <div class="calc-interp">→ 보고 싶은 영화, 이벤트 참여 등 콘텐츠 기대감이 방문 의향을 직접 높임 → H4 채택</div>
+      </div>
+
+      <div class="calc-group">
+        <div class="calc-group-title">H5 채택 — 사회·경험 요인 (β=0.315, p=0.046)</div>
+        <div class="calc-step">사회·경험 요인 점수 1점 증가 시 방문 의향이 평균 <b>0.315점 증가</b></div>
+        <div class="calc-step">p = 0.046 &lt; 0.05 → 통계적으로 유의</div>
+        <div class="calc-step calc-result">구성 문항: V21(외출·나들이 의미), V22(혼자 방문 거부감 없음)</div>
+        <div class="calc-interp">→ 극장을 단순 영화 시청이 아닌 외출 경험으로 인식할수록 방문 의향이 높아짐 → H5 채택</div>
+      </div>
+
+      <div class="calc-group calc-warn">
+        <div class="calc-group-title">H3 기각 — 시설 요인 (β=0.324, p=0.086) ※ 경계선</div>
+        <div class="calc-step">상관분석에서는 r=0.475로 유의했지만, 회귀분석(5개 동시 투입)에서 p=0.086으로 유의하지 않음</div>
+        <div class="calc-step calc-result">이유: 시설 요인과 콘텐츠·사회경험 요인이 서로 겹치는 부분이 있어, 동시에 투입하면 시설만의 독립적 영향이 줄어듦</div>
+        <div class="calc-interp">→ 표본을 늘리면 채택될 가능성도 있음 (β=0.324는 실질적으로 작지 않은 값)</div>
+      </div>
+
+      <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin-top:12px;font-size:12px;color:var(--text2)">
+        <b>📌 R² = 0.375 해석</b><br>
+        이 5개 요인이 방문 의향의 개인차를 <b>37.5% 설명</b>합니다. 나머지 62.5%는 이 설문에서 측정하지 않은 다른 요인들(날씨, 개인 스케줄, 동반자 유무 등)에 의해 설명됩니다. 마케팅 조사 수준에서 R²=0.375는 충분히 의미 있는 수준입니다.
+      </div>
+    </div>
+  </details>
+</div>
+
+<!-- ══════════════ 6. 교차분석 ══════════════ -->
+<div class="sec" id="cross">
+  <div class="page-title">교차분석 — 카이제곱 검정 (H6, H7)</div>
+  <div class="page-desc">인구통계 변수에 따라 방문 의향에 유의미한 차이가 있는지 검증</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">H6 — 연령대 × 방문 의향</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span class="badge bg">✔ 채택</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text3)">χ² = 3.944 / p = 0.047</span>
+      </div>
+      <div class="ch-sm"><canvas id="cCt6"></canvas></div>
+      <div class="div"></div>
+      <div class="ct-wrap">
+        <table class="ct">
+          <thead><tr><th></th><th>낮음(1~3)</th><th>높음(4~5)</th></tr></thead>
+          <tbody>
+            <tr><td class="row-header">20대 이하</td><td>18명</td><td class="high">25명 (58%)</td></tr>
+            <tr><td class="row-header">30대 이상</td><td class="low">7명 (87.5%)</td><td>1명</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight mt20">
+        <div class="insight-title">해석</div>
+        <div class="insight-body">20대 이하는 방문 의향 높음(4~5) 비율이 58%인 반면, 30대 이상은 12.5%에 불과. p=0.047로 유의미한 차이 존재 → <b>H6 채택</b>.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">H7 — OTT 구독 × 방문 의향</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span class="badge br">✘ 기각</span>
+        <span style="font-family:var(--mono);font-size:12px;color:var(--text3)">χ² = 2.526 / p = 0.283</span>
+      </div>
+      <div class="ch-sm"><canvas id="cCt7"></canvas></div>
+      <div class="div"></div>
+      <div class="ct-wrap">
+        <table class="ct">
+          <thead><tr><th></th><th>낮음(1~3)</th><th>높음(4~5)</th></tr></thead>
+          <tbody>
+            <tr><td class="row-header">구독 안 함</td><td>11명</td><td>6명</td></tr>
+            <tr><td class="row-header">1개 구독</td><td>6명</td><td>9명</td></tr>
+            <tr><td class="row-header">2개 이상</td><td>8명</td><td>11명</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="insight mt20">
+        <div class="insight-title">해석</div>
+        <div class="insight-body">OTT 구독 여부와 방문 의향 사이에 통계적으로 유의미한 차이 없음(p=0.283). OTT와 극장은 <b>대체재가 아닌 보완재</b>일 가능성.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 7. 복수응답 ══════════════ -->
+<div class="sec" id="multi">
+  <div class="page-title">복수응답 빈도분석 — H8</div>
+  <div class="page-desc">극장을 가지 않는 이유와 개선 우선순위 (복수선택 허용)</div>
+
+  <div class="g2">
+    <div class="card">
+      <div class="card-title">극장을 가지 않게 되는 주된 이유</div>
+      <div class="ch-lg"><canvas id="cReason"></canvas></div>
+      <div class="warn mt20">
+        <div class="warn-title">⚠ H8 — 예상과 다른 결과</div>
+        <div class="warn-body">당초 "OTT 편의성 > 가격"으로 예상했으나, 실제 1위는 <b>콘텐츠 부재(58.8%)</b>. 가격·OTT편의는 각 35.3%로 동률. 마케팅 전략 방향 재설정 필요.</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">극장 개선 우선순위</div>
+      <div class="ch-lg"><canvas id="cImprove"></canvas></div>
+      <div class="insight mt20">
+        <div class="insight-title">시사점</div>
+        <div class="insight-body">응답자들은 <b>가격 인하(35명)</b>를 1위로 꼽았지만, 실제 방문 저해 1위는 콘텐츠 부재. 인식과 행동 간 차이를 고려한 통합 전략이 필요.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ 8. 가설 요약 ══════════════ -->
+<div class="sec" id="sum">
+  <div class="page-title">가설 검정 종합 요약</div>
+  <div class="page-desc">H1 ~ H8 전체 채택·기각 결과 및 핵심 인사이트</div>
+
+  <div id="hypoList" class="mb16"></div>
+
+  <div class="card">
+    <div class="card-title">핵심 인사이트</div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="insight">
+        <div class="insight-title">🎬 인사이트 1 — 콘텐츠가 핵심이다</div>
+        <div class="insight-body">방문 의향에 가장 큰 영향을 미치는 요인은 <b>콘텐츠·이벤트(β=0.399)</b>. 안 가는 이유 1위도 콘텐츠 부재(58.8%). 극장 마케팅의 핵심은 가격 경쟁이 아닌 <b>콘텐츠 차별화</b>임.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-title">👥 인사이트 2 — 극장은 '경험'이다</div>
+        <div class="insight-body">사회·경험 요인(β=0.315)이 유의미. 외출·나들이 의미 평균 3.51점으로 전체 문항 중 가장 높음. 극장은 단순 영화 시청이 아닌 <b>사회적 경험으로 포지셔닝</b>해야 함.</div>
+      </div>
+      <div class="insight">
+        <div class="insight-title">📺 인사이트 3 — OTT는 경쟁자가 아니다</div>
+        <div class="insight-body">OTT 구독 여부와 방문 의향 차이 없음(p=0.283). OTT를 구독해도 극장을 찾는다는 것은, 극장이 OTT와 <b>대체 관계가 아닌 보완 관계</b>임을 시사.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+const D = {"n":51,"gender":{"남성":32,"여성":19},"age":{"20대":42,"50대 이상":6,"40대":1,"30대":1,"10대":1},"region":{"경기/인천":31,"충청권 (대전, 세종, 충남, 충북)":9,"서울":7,"경상권 (부산, 대구, 울산, 경남, 경북)":3,"강원 / 제주 / 기타":1},"ott":{"2개 이상 구독":19,"구독 안 함":17,"1개 구독":15},"visit":{"있다":42,"없다":9},"freq":{"2~3회":23,"1회":14,"4~6회":3,"7회 이상":2},"companion":{"친구":9,"연인":8,"가족":7,"혼자":6,"친구;가족":4,"연인;친구":3},"intention_dist":{"1":7,"2":4,"3":14,"4":14,"5":12},"likert":{"티켓 가격 적절성":{"mean":2.61,"std":1.02},"할인 혜택 영향":{"mean":3.45,"std":1.14},"식음료 가격 영향":{"mean":2.78,"std":1.4},"거리·접근성 영향":{"mean":3.33,"std":1.38},"극장 감소 체감":{"mean":2.61,"std":1.33},"스크린·음향 차별":{"mean":2.98,"std":1.35},"좌석 편안함":{"mean":2.82,"std":1.4},"특수 상영관":{"mean":2.73,"std":1.43},"보고 싶은 영화→극장":{"mean":3.9,"std":1.15},"OTT 홀드백":{"mean":2.1,"std":1.32},"이벤트":{"mean":2.24,"std":1.32},"굿즈·특전":{"mean":2.29,"std":1.53},"외출·나들이 의미":{"mean":3.51,"std":1.39},"혼자 방문 거부감 없음":{"mean":3.25,"std":1.55},"향후 방문 의향":{"mean":3.39,"std":1.31}},"factor_means":{"비용 요인":3.21,"접근성 요인":2.97,"시설 요인":2.84,"콘텐츠·이벤트":2.63,"사회·경험 요인":3.38},"reliability":{"비용 요인":0.217,"접근성 요인":0.014,"시설 요인":0.643,"콘텐츠·이벤트":0.679,"사회·경험 요인":0.205},"corr":{"비용 요인":{"r":0.227,"p":0.109,"sig":false},"접근성 요인":{"r":0.144,"p":0.313,"sig":false},"시설 요인":{"r":0.475,"p":0.0,"sig":true},"콘텐츠·이벤트":{"r":0.433,"p":0.001,"sig":true},"사회·경험 요인":{"r":0.428,"p":0.002,"sig":true}},"reg":{"r2":0.375,"r2a":0.306,"f":5.407,"fp":0.0006,"coefs":{"H1 비용 요인":{"beta":0.196,"p":0.371,"sig":false},"H2 접근성 요인":{"beta":-0.122,"p":0.5,"sig":false},"H3 시설 요인":{"beta":0.324,"p":0.086,"sig":false},"H4 콘텐츠·이벤트":{"beta":0.399,"p":0.033,"sig":true},"H5 사회·경험 요인":{"beta":0.315,"p":0.046,"sig":true}}},"cross":{"H6":{"chi2":3.944,"p":0.047,"sig":true,"table":{"20대 이하":{"낮음(1~3)":18,"높음(4~5)":25},"30대 이상":{"낮음(1~3)":7,"높음(4~5)":1}}},"H7":{"chi2":2.526,"p":0.283,"sig":false,"table":{"1개 구독":{"낮음(1~3)":6,"높음(4~5)":9},"2개 이상 구독":{"낮음(1~3)":8,"높음(4~5)":11},"구독 안 함":{"낮음(1~3)":11,"높음(4~5)":6}}}},"reasons":{"상영중인 영화 중 보고 싶은 영화가 없어서":{"count":30,"pct":58.8},"티켓 가격이 부담스러워서":{"count":18,"pct":35.3},"집에서 OTT로 편리하게 볼 수 있어서":{"count":18,"pct":35.3},"극장까지 이동이 번거로워서":{"count":13,"pct":25.5},"함께 갈 사람이 없어서":{"count":8,"pct":15.7},"주변에 극장이 없거나 줄어들어서":{"count":3,"pct":5.9}},"improve":{"티켓 가격 인하 또는 할인 혜택 강화":35,"독점·선공개 콘텐츠 확대":18,"이벤트·특별 상영 프로그램 강화":12,"접근성 개선 (더 많은 극장 운영, 교통 편의)":10,"시설 고급화 (좌석·음향·스크린 등)":9,"식음료 가격 합리화":7}};
+
+// ── nav ──
+function go(id, btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+
+// ── chart defaults ──
+const BLUE='#2563eb', BLUE2='#93c5fd', GREEN='#059669', RED='#dc2626', AMBER='#d97706';
+const PALETTE=['#2563eb','#0891b2','#7c3aed','#d97706','#059669','#dc2626'];
+Chart.defaults.font.family="'Noto Sans KR',sans-serif";
+Chart.defaults.font.size=12;
+Chart.defaults.color='#6b7280';
+
+const defScale={x:{ticks:{color:'#6b7280'},grid:{color:'#f3f4f6'}},y:{ticks:{color:'#6b7280'},grid:{color:'#f3f4f6'}}};
+const defOpt={responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#374151'}}}};
+
+// ── 1. 표본 특성 ──
+new Chart('cGender',{type:'doughnut',data:{labels:Object.keys(D.gender),datasets:[{data:Object.values(D.gender),backgroundColor:['#2563eb','#ec4899'],borderWidth:2,borderColor:'#fff'}]},options:{...defOpt,plugins:{legend:{position:'right',labels:{color:'#374151'}}}}});
+new Chart('cAge',{type:'bar',data:{labels:Object.keys(D.age),datasets:[{data:Object.values(D.age),backgroundColor:PALETTE,borderWidth:0,borderRadius:5}]},options:{...defOpt,plugins:{legend:{display:false}},scales:defScale}});
+new Chart('cOtt',{type:'doughnut',data:{labels:Object.keys(D.ott),datasets:[{data:Object.values(D.ott),backgroundColor:['#d97706','#2563eb','#059669'],borderWidth:2,borderColor:'#fff'}]},options:{...defOpt,plugins:{legend:{position:'right',labels:{color:'#374151'}}}}});
+new Chart('cFreq',{type:'bar',data:{labels:['1회','2~3회','4~6회','7회 이상'],datasets:[{data:[14,23,3,2],backgroundColor:PALETTE,borderWidth:0,borderRadius:5}]},options:{...defOpt,plugins:{legend:{display:false}},scales:defScale}});
+new Chart('cIntent',{type:'bar',data:{labels:['1점 (전혀 없다)','2점','3점 (보통)','4점','5점 (매우 있다)'],datasets:[{data:Object.values(D.intention_dist),backgroundColor:['#ef4444','#f97316','#f59e0b','#3b82f6','#10b981'],borderWidth:0,borderRadius:5}]},options:{...defOpt,plugins:{legend:{display:false}},scales:{...defScale,y:{...defScale.y,title:{display:true,text:'응답자 수',color:'#9ca3af'}}}}});
+
+// ── 2. 기술통계 ──
+new Chart('cFactor',{type:'bar',data:{labels:Object.keys(D.factor_means),datasets:[{label:'평균 점수',data:Object.values(D.factor_means),backgroundColor:PALETTE,borderWidth:0,borderRadius:6}]},options:{...defOpt,plugins:{legend:{display:false}},scales:{...defScale,y:{...defScale.y,min:0,max:5,title:{display:true,text:'평균 (5점 만점)',color:'#9ca3af'}}}}});
+
+const factorOf={
+  '티켓 가격 적절성':'비용','할인 혜택 영향':'비용','식음료 가격 영향':'비용',
+  '거리·접근성 영향':'접근성','극장 감소 체감':'접근성',
+  '스크린·음향 차별':'시설','좌석 편안함':'시설','특수 상영관':'시설',
+  '보고 싶은 영화→극장':'콘텐츠','OTT 홀드백':'콘텐츠','이벤트':'콘텐츠','굿즈·특전':'콘텐츠',
+  '외출·나들이 의미':'사회경험','혼자 방문 거부감 없음':'사회경험',
+  '향후 방문 의향':'종속변수'
+};
+const fColor={'비용':'#dbeafe','접근성':'#dcfce7','시설':'#ede9fe','콘텐츠':'#fef3c7','사회경험':'#fce7f3','종속변수':'#f0f9ff'};
+const tb=document.getElementById('descTbody');
+let prevF='';
+Object.entries(D.likert).forEach(([name,v])=>{
+  const f=factorOf[name]||'';
+  const m=v.mean;
+  const lvl=m>=4?`<span class="badge bg">긍정</span>`:m>=3?`<span class="badge ba">보통</span>`:`<span class="badge br">부정</span>`;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td style="font-size:11px;font-weight:700;color:#6b7280;background:${fColor[f]||'#fff'}">${f!==prevF?f:''}</td><td>${name}</td><td class="num" style="color:${BLUE}">${m}</td><td class="num">${v.std}</td><td class="center">${lvl}</td>`;
+  tb.appendChild(tr);
+  prevF=f;
+});
+
+// ── 3. 신뢰도 ──
+const ar=document.getElementById('alphaRows');
+Object.entries(D.reliability).forEach(([name,a])=>{
+  const ok=a>=0.6;
+  const col=ok?GREEN:RED;
+  ar.innerHTML+=`<div class="ab-row"><div class="ab-name">${name}</div><div class="ab-track"><div class="ab-fill" style="width:${Math.min(a*100,100)}%;background:${col}"></div><div class="ab-threshold"></div></div><div class="ab-val" style="color:${col}">${a}</div><span class="badge ${ok?'bg':'br'}" style="flex:0 0 52px">${ok?'수용':'낮음'}</span></div>`;
+});
+
+// ── 4. 상관분석 ──
+const cLabels=Object.keys(D.corr);
+const cVals=cLabels.map(k=>D.corr[k].r);
+new Chart('cCorr',{type:'bar',data:{labels:cLabels,datasets:[{label:'피어슨 r',data:cVals,backgroundColor:cVals.map(v=>v>0?BLUE:'#ef4444'),borderWidth:0,borderRadius:5}]},options:{...defOpt,plugins:{legend:{display:false}},scales:{...defScale,y:{...defScale.y,min:-0.2,max:0.6}}}});
+const ct2=document.getElementById('corrTbody');
+Object.entries(D.corr).forEach(([name,v])=>{
+  const str=Math.abs(v.r)>=0.5?'강한 상관':Math.abs(v.r)>=0.3?'중간 상관':'약한 상관';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><b>${name}</b></td><td class="num" style="color:${BLUE}">${v.r}</td><td class="num">${v.p}</td><td class="center"><span class="badge ${v.sig?'bg':'br'}">${v.sig?'✔ 유의':'✘ 비유의'}</span></td><td style="font-size:12px;color:#6b7280">${str}</td>`;
+  ct2.appendChild(tr);
+});
+
+// ── 5. 회귀분석 ──
+const rKeys=Object.keys(D.reg.coefs);
+const rVals=rKeys.map(k=>D.reg.coefs[k].beta);
+new Chart('cRegr',{type:'bar',data:{labels:rKeys.map(k=>k.replace(/H\d /,'')),datasets:[{label:'β 계수',data:rVals,backgroundColor:rVals.map((_,i)=>D.reg.coefs[rKeys[i]].sig?GREEN:'#d1d5db'),borderWidth:0,borderRadius:5}]},options:{...defOpt,plugins:{legend:{display:false}},scales:defScale}});
+const rt=document.getElementById('regrTbody');
+const hDesc={'H1 비용 요인':'비용 부담↓ → 방문 의향↑','H2 접근성 요인':'접근성↑ → 방문 의향↑','H3 시설 요인':'시설 만족↑ → 방문 의향↑','H4 콘텐츠·이벤트':'콘텐츠 기대↑ → 방문 의향↑','H5 사회·경험 요인':'사회적 경험↑ → 방문 의향↑'};
+Object.entries(D.reg.coefs).forEach(([h,v])=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><b>${h}</b><br><span style="font-size:11px;color:#9ca3af">${hDesc[h]||''}</span></td><td class="num" style="color:${v.sig?GREEN:'#374151'}">${v.beta}</td><td class="num">${v.p}</td><td class="center"><span class="badge ${v.sig?'bg':'br'}">${v.sig?'✔ 채택':'✘ 기각'}</span></td><td style="font-size:12px;color:#6b7280">${v.sig?'통계적으로 유의':'유의하지 않음'}</td>`;
+  rt.appendChild(tr);
+});
+
+// ── 6. 교차분석 ──
+new Chart('cCt6',{type:'bar',data:{labels:['20대 이하','30대 이상'],datasets:[{label:'낮음(1~3)',data:[18,7],backgroundColor:'#fca5a5',borderWidth:0,borderRadius:4},{label:'높음(4~5)',data:[25,1],backgroundColor:'#6ee7b7',borderWidth:0,borderRadius:4}]},options:{...defOpt,scales:defScale}});
+new Chart('cCt7',{type:'bar',data:{labels:['구독 안 함','1개 구독','2개 이상'],datasets:[{label:'낮음(1~3)',data:[11,6,8],backgroundColor:'#fca5a5',borderWidth:0,borderRadius:4},{label:'높음(4~5)',data:[6,9,11],backgroundColor:'#6ee7b7',borderWidth:0,borderRadius:4}]},options:{...defOpt,scales:defScale}});
+
+// ── 7. 복수응답 ──
+const rL=Object.keys(D.reasons);
+const rV=rL.map(k=>D.reasons[k].pct);
+new Chart('cReason',{type:'bar',data:{labels:rL.map(k=>k.length>16?k.slice(0,16)+'…':k),datasets:[{label:'응답자 대비(%)',data:rV,backgroundColor:PALETTE,borderWidth:0,borderRadius:5}]},options:{...defOpt,indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:ctx=>` ${ctx.raw}%`}}},scales:{x:{...defScale.x,max:70,ticks:{callback:v=>v+'%'}},y:defScale.y}}});
+new Chart('cImprove',{type:'bar',data:{labels:Object.keys(D.improve).map(k=>k.length>16?k.slice(0,16)+'…':k),datasets:[{label:'응답 수',data:Object.values(D.improve),backgroundColor:PALETTE,borderWidth:0,borderRadius:5}]},options:{...defOpt,indexAxis:'y',plugins:{legend:{display:false}},scales:defScale}});
+
+// ── 8. 가설 요약 ──
+const allH=[
+  {id:'H1',q:'비용 부담이 낮을수록 극장 방문 의향이 높아질 것이다',method:'다중회귀분석',p:0.371,sig:false},
+  {id:'H2',q:'접근성 만족도가 높을수록 극장 방문 의향이 높아질 것이다',method:'다중회귀분석',p:0.500,sig:false},
+  {id:'H3',q:'시설·관람환경 만족도가 높을수록 극장 방문 의향이 높아질 것이다',method:'다중회귀분석',p:0.086,sig:false,note:'p=0.086, 기각이나 경계선에 위치'},
+  {id:'H4',q:'콘텐츠·이벤트 기대가 높을수록 극장 방문 의향이 높아질 것이다',method:'다중회귀분석',p:0.033,sig:true},
+  {id:'H5',q:'사회적·경험적 요인 인식이 높을수록 극장 방문 의향이 높아질 것이다',method:'다중회귀분석',p:0.046,sig:true},
+  {id:'H6',q:'연령대에 따라 극장 방문 의향에 차이가 있을 것이다',method:'카이제곱 검정',p:0.047,sig:true},
+  {id:'H7',q:'OTT 구독 여부에 따라 극장 방문 의향에 차이가 있을 것이다',method:'카이제곱 검정',p:0.283,sig:false},
+  {id:'H8',q:'극장 미방문 이유 1위는 OTT 편의성일 것이다',method:'복수응답 빈도분석',p:null,sig:false,note:'실제 1위: 콘텐츠 부재(58.8%) → 수정 필요'},
+];
+const hl=document.getElementById('hypoList');
+allH.forEach(h=>{
+  hl.innerHTML+=`<div class="hypo ${h.sig?'pass':'fail'}"><div class="hypo-id">${h.id}</div><div class="hypo-body"><div class="hypo-q">${h.q}</div><div class="hypo-method">검증: ${h.method}${h.note?` · <span style="color:${AMBER}">${h.note}</span>`:''}</div></div><div class="hypo-right"><span class="badge ${h.sig?'bg':'br'}">${h.sig?'✔ 채택':'✘ 기각'}</span>${h.p!==null?`<div class="hypo-p">p = ${h.p}</div>`:''}</div></div>`;
+});
+</script>
+</body>
+</html>
