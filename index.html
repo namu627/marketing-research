@@ -173,20 +173,33 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 
 /* ── 척도 범례 ── */
 .scale-legend{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:18px 22px;box-shadow:var(--shadow)}
-.scale-legend-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:14px}
-.scale-steps{display:flex;align-items:center;gap:4px;margin-bottom:14px;flex-wrap:wrap}
-.scale-step{display:flex;flex-direction:column;align-items:center;gap:4px;min-width:64px}
-.scale-dot{width:20px;height:20px;border-radius:50%;border:2px solid}
-.s1 .scale-dot{background:#fef2f2;border-color:#dc2626}
-.s2 .scale-dot{background:#fff7ed;border-color:#f97316}
-.s3 .scale-dot{background:#fafafa;border-color:#9ca3af}
-.s4 .scale-dot{background:#f0fdf4;border-color:#16a34a}
-.s5 .scale-dot{background:#dcfce7;border-color:#059669}
-.scale-num{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--text)}
-.scale-txt{font-size:10px;color:var(--text2);text-align:center;line-height:1.3}
-.scale-arrow{color:var(--text3);font-size:16px;margin-bottom:24px}
-.scale-interp{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;border-top:1px solid var(--border);padding-top:12px}
-.si-neg{color:var(--red)}.si-mid{color:var(--text2)}.si-pos{color:var(--green)}
+.scale-legend-title{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:20px}
+.scale-track-wrap{padding:0 12px}
+.scale-track{position:relative;padding-bottom:36px}
+.scale-track-bar{position:absolute;top:10px;left:0;right:0;height:4px;background:linear-gradient(to right,#fca5a5,#fcd34d,#d1d5db,#6ee7b7,#34d399);border-radius:2px}
+.scale-points{display:flex;justify-content:space-between;position:relative}
+.scale-point{display:flex;flex-direction:column;align-items:center;width:20%;gap:4px}
+.scale-dot{width:18px;height:18px;border-radius:50%;border:2px solid;background:#fff;z-index:1;position:relative}
+.sp1 .scale-dot{border-color:#dc2626;background:#fef2f2}
+.sp2 .scale-dot{border-color:#f97316;background:#fff7ed}
+.sp3 .scale-dot{border-color:#9ca3af;background:#f9fafb}
+.sp4 .scale-dot{border-color:#16a34a;background:#f0fdf4}
+.sp5 .scale-dot{border-color:#059669;background:#dcfce7}
+.scale-num{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--text)}
+.scale-txt{font-size:11px;color:var(--text2);text-align:center;line-height:1.4;white-space:nowrap}
+.scale-interp{display:flex;gap:20px;flex-wrap:wrap;font-size:12px;border-top:1px solid var(--border);padding-top:12px;margin-top:4px}
+.si-neg{color:var(--red)}.si-mid{color:var(--text3)}.si-pos{color:var(--green)}
+
+/* ── 요인 차트 + 범례 레이아웃 ── */
+.factor-chart-wrap{display:flex;gap:0;align-items:stretch}
+.factor-scale-legend{display:flex;flex-direction:column;justify-content:space-between;padding:8px 12px 24px 0;border-right:1px dashed var(--border2);margin-right:16px;min-width:52px}
+.fsl-item{font-size:11px;font-weight:700;text-align:right;line-height:1.3;display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+.fsl-item span{font-size:10px;font-weight:400;color:var(--text3);line-height:1.3}
+.fsl-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-bottom:2px}
+.fsl-neg{color:var(--red)}.fsl-neg .fsl-dot{background:var(--red)}
+.fsl-mid{color:var(--text3)}.fsl-mid .fsl-dot{background:var(--text3)}
+.fsl-pos{color:var(--green)}.fsl-pos .fsl-dot{background:var(--green)}
+.factor-chart-area{flex:1;min-width:0}
 
 /* ── 드롭다운(details/summary) ── */
 .detail-box{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}
@@ -213,6 +226,48 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 .calc-interp{font-size:12px;color:var(--green);margin-top:8px;padding-left:10px}
 .calc-warn .calc-interp{color:var(--amber)}
 .calc-warn{border-color:#fcd34d;background:#fffbeb}
+
+/* ── 결론 섹션 ── */
+.conc-label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;margin-top:28px}
+.conc-label:first-child{margin-top:0}
+.conc-section{display:flex;flex-direction:column;gap:12px}
+.conc-block{display:flex;gap:16px;background:var(--white);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
+.conc-block-num{flex:0 0 32px;height:32px;background:var(--blue);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:var(--mono);margin-top:2px}
+.conc-block-body{flex:1}
+.conc-block-title{font-size:15px;font-weight:700;color:var(--text);margin-bottom:8px;line-height:1.4}
+.conc-block-body p{font-size:13px;color:var(--text2);line-height:1.9}
+.conc-block-body strong{color:var(--text);font-weight:700}
+mark{background:linear-gradient(120deg,#fde68a 0%,#fcd34d 100%);padding:1px 4px;border-radius:3px;color:var(--text)}
+
+/* ── 전략 카드 ── */
+.strategy-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+.strategy-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.strat-header{display:flex;gap:14px;align-items:flex-start;padding:18px 20px 14px;border-bottom:1px solid var(--border)}
+.strat-icon{font-size:24px;flex:0 0 auto;margin-top:2px}
+.strat-num{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.strat-title{font-size:14px;font-weight:800;color:var(--text);margin-bottom:4px}
+.strat-basis{font-size:11px;color:var(--text3);line-height:1.5}
+.strat-body{padding:16px 20px;display:flex;flex-direction:column;gap:12px}
+.strat-item{font-size:12px;color:var(--text2);line-height:1.8;padding-left:10px;border-left:2px solid var(--border2)}
+.strat-item strong{color:var(--text)}
+.strat-tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin-right:6px;margin-bottom:2px}
+.strat-1 .strat-header{background:#eff6ff}.strat-1 .strat-tag{background:#dbeafe;color:#1d4ed8}
+.strat-2 .strat-header{background:#f0fdf4}.strat-2 .strat-tag{background:#dcfce7;color:#15803d}
+.strat-3 .strat-header{background:#fffbeb}.strat-3 .strat-tag{background:#fef3c7;color:#b45309}
+.strat-4 .strat-header{background:#fdf4ff}.strat-4 .strat-tag{background:#f3e8ff;color:#7e22ce}
+
+/* ── 한계점 ── */
+.conc-limit{background:#f8f9fb;border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px}
+.conc-limit-title{font-size:12px;font-weight:700;color:var(--amber);margin-bottom:8px}
+.conc-limit-body{font-size:12px;color:var(--text2);line-height:1.9}
+.conc-limit-body strong{color:var(--text)}
+
+@media(max-width:900px){
+  .strategy-grid{grid-template-columns:1fr}
+  .conc-block{flex-direction:column}
+  .factor-chart-wrap{flex-direction:column}
+  .factor-scale-legend{flex-direction:row;border-right:none;border-bottom:1px dashed var(--border2);padding:0 0 10px;margin-right:0;margin-bottom:12px}
+}
 </style>
 </head>
 <body>
@@ -221,13 +276,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
   <div class="header-inner">
     <div class="header-eyebrow">마케팅조사론 — 4조 조별과제</div>
     <h1>OTT 확산 시대, 오프라인 멀티플렉스 극장<br>방문 의향에 영향을 미치는 요인 분석</h1>
-    <div class="header-sub">CGV · 메가박스 · 롯데시네마 대상 설문조사 분석 결과 보고서</div>
-    <div class="header-chips">
-      <span class="chip">총 응답자 <b>51명</b></span>
-      <span class="chip">설문 기간 <b>2026년 5월</b></span>
-      <span class="chip">분석 도구 <b>Python · scipy · statsmodels</b></span>
-      <span class="chip">가설 <b>H1 ~ H8</b></span>
-    </div>
+    <div class="header-sub">남유찬, 오윤도, 이규민, 이영재</div>
   </div>
 </div>
 
@@ -242,6 +291,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
     <button class="nav-btn" onclick="go('cross',this)">⊞ 교차분석</button>
     <button class="nav-btn" onclick="go('multi',this)">💬 복수응답</button>
     <button class="nav-btn" onclick="go('sum',this)">✅ 가설 요약</button>
+    <button class="nav-btn" onclick="go('conclusion',this)">💡 결론 및 전략</button>
   </div>
 </nav>
 
@@ -291,7 +341,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
       <div>
         <div style="font-size:12px;font-weight:700;color:var(--text2);margin-bottom:10px">종속변수 & 기타 가설</div>
         <div style="background:var(--blue-light);border:1px solid var(--blue-mid);border-radius:6px;padding:14px 16px;margin-bottom:10px">
-          <div style="font-size:13px;font-weight:700;color:var(--blue)">종속변수 (V27)</div>
+          <div style="font-size:13px;font-weight:700;color:var(--blue)">종속변수</div>
           <div style="font-size:12px;color:#1e40af;margin-top:4px">향후 6개월 이내 멀티플렉스 극장 방문 의향<br>(5점 리커트 척도)</div>
         </div>
         <div style="display:flex;flex-direction:column;gap:6px">
@@ -327,7 +377,7 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
     </div>
     <div class="stat-card">
       <div class="stat-num green">3.39</div>
-      <div class="stat-label">평균 방문 의향 (5점)</div>
+      <div class="stat-label">평균 방문 의향 (5점 만점)</div>
       <div class="stat-note">보통 이상의 방문 의향</div>
     </div>
   </div>
@@ -370,34 +420,39 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
   <!-- 척도 설명 -->
   <div class="scale-legend mb16">
     <div class="scale-legend-title">📏 응답 척도 안내 — 모든 문항은 아래 5점 척도로 응답</div>
-    <div class="scale-steps">
-      <div class="scale-step s1"><div class="scale-dot"></div><div class="scale-num">1점</div><div class="scale-txt">전혀<br>그렇지 않다</div></div>
-      <div class="scale-arrow">→</div>
-      <div class="scale-step s2"><div class="scale-dot"></div><div class="scale-num">2점</div><div class="scale-txt">그렇지<br>않다</div></div>
-      <div class="scale-arrow">→</div>
-      <div class="scale-step s3"><div class="scale-dot"></div><div class="scale-num">3점</div><div class="scale-txt">보통<br>이다</div></div>
-      <div class="scale-arrow">→</div>
-      <div class="scale-step s4"><div class="scale-dot"></div><div class="scale-num">4점</div><div class="scale-txt">그렇다</div></div>
-      <div class="scale-arrow">→</div>
-      <div class="scale-step s5"><div class="scale-dot"></div><div class="scale-num">5점</div><div class="scale-txt">매우<br>그렇다</div></div>
+    <div class="scale-track-wrap">
+      <div class="scale-track">
+        <div class="scale-track-bar"></div>
+        <div class="scale-points">
+          <div class="scale-point sp1"><div class="scale-dot"></div><div class="scale-num">1점</div><div class="scale-txt">전혀 그렇지 않다</div></div>
+          <div class="scale-point sp2"><div class="scale-dot"></div><div class="scale-num">2점</div><div class="scale-txt">그렇지 않다</div></div>
+          <div class="scale-point sp3"><div class="scale-dot"></div><div class="scale-num">3점</div><div class="scale-txt">보통이다</div></div>
+          <div class="scale-point sp4"><div class="scale-dot"></div><div class="scale-num">4점</div><div class="scale-txt">그렇다</div></div>
+          <div class="scale-point sp5"><div class="scale-dot"></div><div class="scale-num">5점</div><div class="scale-txt">매우 그렇다</div></div>
+        </div>
+      </div>
     </div>
     <div class="scale-interp">
-      <span class="si-item si-neg">● 평균 1~2.9점 = 부정적 (대체로 동의하지 않음)</span>
-      <span class="si-item si-mid">● 평균 3점 = 보통 (중립)</span>
-      <span class="si-item si-pos">● 평균 3.1~5점 = 긍정적 (대체로 동의함)</span>
+      <span class="si-neg">● 1~2점대 = 부정적</span>
+      <span class="si-mid">● 3점 = 보통 (중립)</span>
+      <span class="si-pos">● 4~5점대 = 긍정적</span>
     </div>
   </div>
 
   <div class="card mb16">
     <div class="card-title">요인별 평균 점수 비교 (5점 만점)</div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px;color:var(--text3)">
-      <span style="color:var(--red)">◀ 1점 (전혀 그렇지 않다)</span>
-      <span style="color:var(--text3)">3점 (보통)</span>
-      <span style="color:var(--green)">5점 (매우 그렇다) ▶</span>
+    <div class="factor-chart-wrap">
+      <div class="factor-scale-legend">
+        <div class="fsl-item fsl-pos"><span class="fsl-dot"></span>5점<br><span>매우<br>그렇다</span></div>
+        <div class="fsl-item fsl-mid"><span class="fsl-dot"></span>3점<br><span>보통</span></div>
+        <div class="fsl-item fsl-neg"><span class="fsl-dot"></span>1점<br><span>전혀<br>그렇지<br>않다</span></div>
+      </div>
+      <div class="factor-chart-area">
+        <div class="ch-lg"><canvas id="cFactor"></canvas></div>
+      </div>
     </div>
-    <div class="ch-lg"><canvas id="cFactor"></canvas></div>
     <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--border);font-size:12px;color:var(--text2)">
-      💡 <b>읽는 법:</b> 막대가 높을수록 해당 요인에 대해 응답자들이 더 긍정적으로 응답했음을 의미합니다. 3점이 중립(보통)이므로, 3점을 넘으면 전반적으로 동의하는 경향이 있습니다.
+      💡 <b>읽는 법:</b> 막대가 높을수록 해당 요인에 대해 응답자들이 더 긍정적으로 응답했음을 의미합니다. <b>3점이 중립(보통)</b>이므로, 3점을 넘으면 전반적으로 동의하는 경향이 있습니다.
     </div>
   </div>
 
@@ -804,6 +859,158 @@ body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-seri
 </div>
 
 </div><!-- /wrap -->
+
+<!-- ══════════════ 결론 섹션 (wrap 밖에 별도 배치) ══════════════ -->
+<div class="wrap">
+<div class="sec" id="conclusion">
+  <div class="page-title">결론 및 마케팅 전략 제안</div>
+  <div class="page-desc">분석 결과를 바탕으로 도출한 핵심 결론과 실행 가능한 전략</div>
+
+  <!-- 결론 -->
+  <div class="conc-section mb16">
+    <div class="conc-label">📊 결론</div>
+
+    <div class="conc-block">
+      <div class="conc-block-num">01</div>
+      <div class="conc-block-body">
+        <div class="conc-block-title">극장을 찾지 않는 진짜 이유는 <mark>OTT가 아니라 콘텐츠 부재</mark>였다</div>
+        <p>당초 OTT 확산이 극장 침체의 주범으로 지목되어 왔으나, 이번 조사에서 <strong>OTT 구독 여부는 방문 의향과 통계적으로 유의미한 차이를 만들지 않았다(H7 기각, p=0.283)</strong>. 오히려 극장을 가지 않는 가장 큰 이유는 <mark>"상영 중인 영화 중 보고 싶은 영화가 없어서"(응답자의 58.8%)</mark>였으며, OTT 편의성(35.3%)과 가격 부담(35.3%)은 그 뒤를 이었다. 즉, 극장과 OTT는 대체재가 아닌 <strong>보완재 관계</strong>에 있으며, 관객은 보고 싶은 콘텐츠가 있으면 OTT를 구독하더라도 극장을 찾는다.</p>
+      </div>
+    </div>
+
+    <div class="conc-block">
+      <div class="conc-block-num">02</div>
+      <div class="conc-block-body">
+        <div class="conc-block-title">방문 의향을 높이는 핵심은 <mark>콘텐츠·이벤트</mark>와 <mark>사회적 경험</mark>이다</div>
+        <p>다중회귀분석 결과, 5개 요인 중 <strong>콘텐츠·이벤트 요인(β=0.399, p=0.033)</strong>과 <strong>사회·경험 요인(β=0.315, p=0.046)</strong>만이 방문 의향에 통계적으로 유의미한 영향을 미쳤다. 반면 비용(p=0.371), 접근성(p=0.500), 시설(p=0.086)은 유의미하지 않았다. 이는 관객이 극장을 선택할 때 <mark>가격 합리성보다 "무엇을 볼 수 있는가"와 "어떤 경험을 할 수 있는가"</mark>를 더 중요하게 고려함을 의미한다.</p>
+      </div>
+    </div>
+
+    <div class="conc-block">
+      <div class="conc-block-num">03</div>
+      <div class="conc-block-body">
+        <div class="conc-block-title"><mark>20대 이하</mark>가 핵심 타깃, 연령대별 방문 의향 차이 존재</div>
+        <p>교차분석 결과 연령대에 따라 방문 의향에 유의미한 차이가 있었다(H6 채택, χ²=3.944, p=0.047). <strong>20대 이하의 58%가 방문 의향 높음(4~5점)</strong>을 선택한 반면, 30대 이상은 12.5%에 불과했다. 표본의 82%가 20대로 편중된 한계가 있으나, 현 극장 산업의 주 소비층이 20대임을 반영하는 결과이기도 하다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 마케팅 전략 -->
+  <div class="conc-label">🎯 마케팅 전략 제안</div>
+
+  <div class="strategy-grid">
+
+    <div class="strategy-card strat-1">
+      <div class="strat-header">
+        <div class="strat-icon">🎬</div>
+        <div>
+          <div class="strat-num">전략 1</div>
+          <div class="strat-title">콘텐츠 차별화 전략</div>
+          <div class="strat-basis">근거: H4 채택(β=0.399) · 미방문 이유 1위 콘텐츠 부재(58.8%)</div>
+        </div>
+      </div>
+      <div class="strat-body">
+        <div class="strat-item">
+          <span class="strat-tag">독점 상영</span>
+          OTT 공개 전 <strong>극장 단독 선공개 기간(홀드백)</strong> 적극 홍보. "OTT에서 볼 수 없는 지금 이 순간"이라는 메시지로 희소성 강조
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">기획 상영</span>
+          신인 감독전, 해외 巨匠 회고전, 명작 복원 상영 등 <strong>OTT에 없는 큐레이션 콘텐츠</strong> 정기 편성. 다양성 영화 접근성 확대
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">이벤트 상영</span>
+          시사회·무대인사·GV는 상관분석에서 r=0.433으로 유의한 상관을 보임. <strong>배우·감독 직접 참여 이벤트</strong>를 정기화해 "극장에서만 가능한 경험" 제공
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card strat-2">
+      <div class="strat-header">
+        <div class="strat-icon">👥</div>
+        <div>
+          <div class="strat-num">전략 2</div>
+          <div class="strat-title">극장 = 사회적 경험 포지셔닝</div>
+          <div class="strat-basis">근거: H5 채택(β=0.315) · 외출·나들이 의미 평균 3.51점 (전 문항 최고)</div>
+        </div>
+      </div>
+      <div class="strat-body">
+        <div class="strat-item">
+          <span class="strat-tag">데이트·모임 패키지</span>
+          영화 + 식사 + 카페 연계 <strong>번들 할인 패키지</strong> 구성. "오늘 저녁 뭐 할까?" 질문에 자연스럽게 극장이 떠오르도록 포지셔닝
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">SNS 연동</span>
+          관람 인증 이벤트, 굿즈 증정, 공유 혜택 등 <strong>소셜 미디어 바이럴을 유도</strong>하는 캠페인. 20대 타깃 인스타그램·틱톡 채널 강화
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">혼자도 OK</span>
+          혼자 방문 거부감 없음 평균 3.25점으로 비교적 높음. <strong>1인 관람 전용석·조용한 상영관</strong> 등 솔로 관람 문화 적극 수용
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card strat-3">
+      <div class="strat-header">
+        <div class="strat-icon">💰</div>
+        <div>
+          <div class="strat-num">전략 3</div>
+          <div class="strat-title">가격 인식 개선 전략</div>
+          <div class="strat-basis">근거: 개선 우선순위 1위 가격 인하(35명) · 티켓 가격 적절성 평균 2.61점</div>
+        </div>
+      </div>
+      <div class="strat-body">
+        <div class="strat-item">
+          <span class="strat-tag">할인 혜택 가시화</span>
+          할인 혜택 영향 평균 3.45점으로 비용 요인 중 가장 높음. 현재 있는 <strong>카드·통신사 할인을 더 쉽게 찾고 쓸 수 있도록</strong> UI 개선 및 홍보 강화
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">구독형 멤버십</span>
+          월정액으로 일정 횟수 관람 가능한 <strong>넷플릭스형 구독 모델</strong> 도입 검토. "OTT만큼 합리적인 가격"이라는 인식 전환 목표
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">가치 중심 커뮤니케이션</span>
+          단순 가격 인하보다 <strong>"이 경험의 가치"를 강조</strong>하는 마케팅. 시설·음향·이벤트 등 프리미엄 경험에 걸맞은 가격임을 설득
+        </div>
+      </div>
+    </div>
+
+    <div class="strategy-card strat-4">
+      <div class="strat-header">
+        <div class="strat-icon">📍</div>
+        <div>
+          <div class="strat-num">전략 4</div>
+          <div class="strat-title">20대 타깃 집중 전략</div>
+          <div class="strat-basis">근거: H6 채택 · 20대 이하 방문 의향 높음 비율 58% vs 30대 이상 12.5%</div>
+        </div>
+      </div>
+      <div class="strat-body">
+        <div class="strat-item">
+          <span class="strat-tag">IP 연계</span>
+          20대가 열광하는 웹툰·애니메이션·아이돌 IP를 활용한 <strong>팝업 상영 및 굿즈 이벤트</strong>. 굿즈·특전 평균이 낮으나(2.29점), 관심 콘텐츠와 결합 시 효과적
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">대학가 접근성</span>
+          경기/인천 거주자가 60.8%로 가장 많음. <strong>대학교 인근 소형 상영관 확충</strong> 또는 팝업 상영 이벤트로 물리적 접근성 보완
+        </div>
+        <div class="strat-item">
+          <span class="strat-tag">디지털 채널 마케팅</span>
+          20대는 OTT 구독률도 높고(2개 이상 구독 37%) 디지털 환경에 친숙. <strong>숏폼 영상·인플루언서 협업</strong>으로 극장 경험 자체를 콘텐츠화
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="conc-limit">
+    <div class="conc-limit-title">⚠ 연구의 한계점</div>
+    <div class="conc-limit-body">
+      본 연구는 <strong>표본의 연령 편중(20대 82.4%)</strong>으로 전체 관객 집단을 대표하기 어렵고, <strong>표본 수(51명)가 적어</strong> 일부 요인의 신뢰도(Cronbach α)가 낮게 측정되었을 수 있습니다. 또한 <strong>편의표본 추출</strong>로 인한 표본 편향 가능성이 있습니다. 향후 연구에서는 연령대를 고르게 할당한 대규모 표본을 활용하고, 극장 유형(대형 멀티플렉스 vs 독립·예술영화관)별 비교 분석을 수행한다면 더 정확한 전략 수립이 가능할 것입니다.
+    </div>
+  </div>
+
+</div>
+</div>
 
 <script>
 const D = {"n":51,"gender":{"남성":32,"여성":19},"age":{"20대":42,"50대 이상":6,"40대":1,"30대":1,"10대":1},"region":{"경기/인천":31,"충청권 (대전, 세종, 충남, 충북)":9,"서울":7,"경상권 (부산, 대구, 울산, 경남, 경북)":3,"강원 / 제주 / 기타":1},"ott":{"2개 이상 구독":19,"구독 안 함":17,"1개 구독":15},"visit":{"있다":42,"없다":9},"freq":{"2~3회":23,"1회":14,"4~6회":3,"7회 이상":2},"companion":{"친구":9,"연인":8,"가족":7,"혼자":6,"친구;가족":4,"연인;친구":3},"intention_dist":{"1":7,"2":4,"3":14,"4":14,"5":12},"likert":{"티켓 가격 적절성":{"mean":2.61,"std":1.02},"할인 혜택 영향":{"mean":3.45,"std":1.14},"식음료 가격 영향":{"mean":2.78,"std":1.4},"거리·접근성 영향":{"mean":3.33,"std":1.38},"극장 감소 체감":{"mean":2.61,"std":1.33},"스크린·음향 차별":{"mean":2.98,"std":1.35},"좌석 편안함":{"mean":2.82,"std":1.4},"특수 상영관":{"mean":2.73,"std":1.43},"보고 싶은 영화→극장":{"mean":3.9,"std":1.15},"OTT 홀드백":{"mean":2.1,"std":1.32},"이벤트":{"mean":2.24,"std":1.32},"굿즈·특전":{"mean":2.29,"std":1.53},"외출·나들이 의미":{"mean":3.51,"std":1.39},"혼자 방문 거부감 없음":{"mean":3.25,"std":1.55},"향후 방문 의향":{"mean":3.39,"std":1.31}},"factor_means":{"비용 요인":3.21,"접근성 요인":2.97,"시설 요인":2.84,"콘텐츠·이벤트":2.63,"사회·경험 요인":3.38},"reliability":{"비용 요인":0.217,"접근성 요인":0.014,"시설 요인":0.643,"콘텐츠·이벤트":0.679,"사회·경험 요인":0.205},"corr":{"비용 요인":{"r":0.227,"p":0.109,"sig":false},"접근성 요인":{"r":0.144,"p":0.313,"sig":false},"시설 요인":{"r":0.475,"p":0.0,"sig":true},"콘텐츠·이벤트":{"r":0.433,"p":0.001,"sig":true},"사회·경험 요인":{"r":0.428,"p":0.002,"sig":true}},"reg":{"r2":0.375,"r2a":0.306,"f":5.407,"fp":0.0006,"coefs":{"H1 비용 요인":{"beta":0.196,"p":0.371,"sig":false},"H2 접근성 요인":{"beta":-0.122,"p":0.5,"sig":false},"H3 시설 요인":{"beta":0.324,"p":0.086,"sig":false},"H4 콘텐츠·이벤트":{"beta":0.399,"p":0.033,"sig":true},"H5 사회·경험 요인":{"beta":0.315,"p":0.046,"sig":true}}},"cross":{"H6":{"chi2":3.944,"p":0.047,"sig":true,"table":{"20대 이하":{"낮음(1~3)":18,"높음(4~5)":25},"30대 이상":{"낮음(1~3)":7,"높음(4~5)":1}}},"H7":{"chi2":2.526,"p":0.283,"sig":false,"table":{"1개 구독":{"낮음(1~3)":6,"높음(4~5)":9},"2개 이상 구독":{"낮음(1~3)":8,"높음(4~5)":11},"구독 안 함":{"낮음(1~3)":11,"높음(4~5)":6}}}},"reasons":{"상영중인 영화 중 보고 싶은 영화가 없어서":{"count":30,"pct":58.8},"티켓 가격이 부담스러워서":{"count":18,"pct":35.3},"집에서 OTT로 편리하게 볼 수 있어서":{"count":18,"pct":35.3},"극장까지 이동이 번거로워서":{"count":13,"pct":25.5},"함께 갈 사람이 없어서":{"count":8,"pct":15.7},"주변에 극장이 없거나 줄어들어서":{"count":3,"pct":5.9}},"improve":{"티켓 가격 인하 또는 할인 혜택 강화":35,"독점·선공개 콘텐츠 확대":18,"이벤트·특별 상영 프로그램 강화":12,"접근성 개선 (더 많은 극장 운영, 교통 편의)":10,"시설 고급화 (좌석·음향·스크린 등)":9,"식음료 가격 합리화":7}};
